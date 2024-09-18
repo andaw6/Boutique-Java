@@ -1,4 +1,5 @@
 package com.ehacdev.interfaces;
 
-public interface IRepository {
-}
+public interface IRepository<T> extends ICrud<T>{ }
+
+

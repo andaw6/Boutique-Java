@@ -1,4 +1,4 @@
 package com.ehacdev.interfaces;
 
-public interface IService {
-}
+public interface IService<T> extends ICrud<T> { }
+

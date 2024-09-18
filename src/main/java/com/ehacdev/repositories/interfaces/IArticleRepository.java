@@ -1,4 +1,12 @@
 package com.ehacdev.repositories.interfaces;
 
-public interface IArticleRepository {
+import com.ehacdev.entities.Article;
+import com.ehacdev.interfaces.IRepository;
+
+import java.util.Optional;
+
+public interface IArticleRepository extends IRepository<Article> {
+
+    Optional<Article> findByTitle(String title);
+
 }
