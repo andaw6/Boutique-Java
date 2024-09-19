@@ -6,5 +6,7 @@ import com.ehacdev.interfaces.IRepository;
 import java.util.Optional;
 
 public interface IClientRepository extends IRepository<Client> {
+
     Optional<Client> findByTelephone(String telephone);
+
 }

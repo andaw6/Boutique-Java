@@ -2,6 +2,7 @@ package com.ehacdev.repositories;
 
 import com.ehacdev.database.CrudRepository;
 import com.ehacdev.database.DatabaseFactory;
+import com.ehacdev.entities.Article;
 import com.ehacdev.entities.Client;
 import com.ehacdev.repositories.interfaces.IClientRepository;
 import org.springframework.context.annotation.Profile;
@@ -31,7 +32,7 @@ public class ClientRepositoryJDBC extends CrudRepository<Client> implements ICli
 
     @Override
     public Client save(Client client) {
-        String query = "INSERT INTO " + tableName + " (surname, address, qrcode, maxMontant, user_id, categorie_id, telephone) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO " + tableName + " (surname, address, qrcode, max_montant, user_id, categorie_id, telephone) VALUES (?, ?, ?, ?, ?, ?, ?)";
         return executeUpdate(query, preparedStatement -> {
             setClientParameters(preparedStatement, client);
         });
@@ -80,16 +81,15 @@ public class ClientRepositoryJDBC extends CrudRepository<Client> implements ICli
     // Méthode pour définir les paramètres du PreparedStatement pour un Client
     private void setClientParameters(PreparedStatement preparedStatement, Client client) throws SQLException {
         preparedStatement.setString(1, client.getSurname());
-        preparedStatement.setString(2, client.getAddress());
+        preparedStatement.setString(2, client.getAdresse());
         preparedStatement.setString(3, client.getQrcode());
-        preparedStatement.setInt(4, client.getMax_montant());
-        Optional<Integer> userIdOpt = client.getUser_id();
-        if (userIdOpt.isPresent()) {
-            preparedStatement.setInt(5, userIdOpt.get());
+        preparedStatement.setInt(4, client.getMaxMontant());
+        if (client.getUser() != null) {
+            preparedStatement.setInt(5, client.getUser().getId());
         } else {
             preparedStatement.setNull(5, java.sql.Types.INTEGER);
         }
-        preparedStatement.setInt(6, client.getCategorie_id());
+        preparedStatement.setInt(6, client.getCategorie().getId());
         preparedStatement.setString(7, client.getTelephone());
     }
 
@@ -98,5 +98,23 @@ public class ClientRepositoryJDBC extends CrudRepository<Client> implements ICli
     @FunctionalInterface
     private interface StatementSetter {
         void setValues(PreparedStatement preparedStatement) throws SQLException;
+    }
+
+    @Override
+    protected Client mapRowToObject(ResultSet resultSet) {
+        try {
+            Client client = new Client();
+            client.setId(resultSet.getInt("id"));
+            client.setAdresse(resultSet.getString("adresse"));
+            client.setQrcode(resultSet.getString("qrcode"));
+            client.setMaxMontant(resultSet.getInt("max_montant"));
+            client.setTelephone(resultSet.getString("telephone"));
+            client.setSurname(resultSet.getString("surname"));
+
+            return client;
+        } catch (SQLException e) {
+            System.out.println("Erreur lors du mapping du champ");
+            return traceErrorSql(e);
+        }
     }
 }

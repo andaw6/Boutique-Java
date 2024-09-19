@@ -3,7 +3,9 @@ package com.ehacdev.repositories;
 import com.ehacdev.database.CrudRepository;
 import com.ehacdev.database.DatabaseFactory;
 import com.ehacdev.entities.Article;
+import com.ehacdev.interfaces.IDatabase;
 import com.ehacdev.repositories.interfaces.IArticleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 

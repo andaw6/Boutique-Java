@@ -1,6 +1,7 @@
 package com.ehacdev.database;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -107,9 +108,29 @@ public class CrudRepository<T> implements IRepository<T> {
 
                 try {
                     Object value = resultSet.getObject(field.getName());
+
+                    // Vérifier si le type du champ est primitif ou différent du type récupéré
+                    if (value != null) {
+                        if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
+                            if (value instanceof BigInteger) {
+                                value = ((BigInteger) value).intValue(); // Conversion BigInteger en int
+                            } else if (value instanceof Long) {
+                                value = ((Long) value).intValue(); // Conversion Long en int
+                            }
+                        } else if (field.getType().equals(long.class) || field.getType().equals(Long.class)) {
+                            if (value instanceof BigInteger) {
+                                value = ((BigInteger) value).longValue(); // Conversion BigInteger en long
+                            }
+                        }
+                        // Vous pouvez ajouter d'autres conversions si nécessaire
+                    }
+
                     field.set(obj, value);
                 } catch (SQLException e) {
                     System.out.println("Erreur lors du mapping du champ : " + field.getName());
+                    e.printStackTrace();
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Incompatibilité de type pour le champ : " + field.getName());
                     e.printStackTrace();
                 }
             }
@@ -119,6 +140,7 @@ public class CrudRepository<T> implements IRepository<T> {
             return null;
         }
     }
+
 
     protected <T> T traceErrorSql(SQLException e) {
         if (e.getSQLState().equals("23000")) {
