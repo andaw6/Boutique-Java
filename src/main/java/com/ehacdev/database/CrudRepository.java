@@ -11,13 +11,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.ehacdev.interfaces.Identifiable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.ehacdev.interfaces.IRepository;
 
 @Repository
-public class CrudRepository<T> implements IRepository<T> {
+public class CrudRepository<T extends Identifiable> implements IRepository<T> {
 
     protected final DatabaseFactory databaseFactory;
     protected Class<T> type;
@@ -104,12 +105,10 @@ public class CrudRepository<T> implements IRepository<T> {
 
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
-                field.setAccessible(true); // Permet d'accéder aux champs privés
-
+                field.setAccessible(true);
                 try {
-                    Object value = resultSet.getObject(field.getName());
+                        Object value = resultSet.getObject(field.getName());
 
-                    // Vérifier si le type du champ est primitif ou différent du type récupéré
                     if (value != null) {
                         if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
                             if (value instanceof BigInteger) {
@@ -122,7 +121,6 @@ public class CrudRepository<T> implements IRepository<T> {
                                 value = ((BigInteger) value).longValue(); // Conversion BigInteger en long
                             }
                         }
-                        // Vous pouvez ajouter d'autres conversions si nécessaire
                     }
 
                     field.set(obj, value);
