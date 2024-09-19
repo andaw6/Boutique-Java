@@ -1,11 +1,11 @@
 package com.ehacdev.entities;
 
 import com.ehacdev.interfaces.Identifiable;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Article implements Identifiable {
 
     private int id;
@@ -24,4 +24,8 @@ public class Article implements Identifiable {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return "Article [id=" + id + ", title=" + title + ", price=" + price + ", quantity=" + quantity+", threshold="+threshold+"]";
+    }
 }

@@ -9,4 +9,6 @@ public interface IArticleRepository extends IRepository<Article> {
 
     Optional<Article> findByTitle(String title);
 
+    Boolean existsById(int id);
+
 }

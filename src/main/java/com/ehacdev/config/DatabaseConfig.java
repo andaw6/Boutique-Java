@@ -1,17 +1,16 @@
 package com.ehacdev.config;
 
-import org.springframework.beans.factory.annotation.Value;  // Correction de l'import
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 
 import javax.sql.DataSource;
 
 @Configuration
+@PropertySource("classpath:db.properties") // Use custom properties file
 public class DatabaseConfig {
-
-    @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
 
     @Value("${spring.datasource.url}")
     private String url;
@@ -22,14 +21,16 @@ public class DatabaseConfig {
     @Value("${spring.datasource.password}")
     private String password;
 
+    @Value("${spring.datasource.driver-class-name}")
+    private String driverClassName;
+
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-
-        return dataSource;
+        DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.url(url);
+        dataSourceBuilder.username(username);
+        dataSourceBuilder.password(password);
+        dataSourceBuilder.driverClassName(driverClassName);
+        return dataSourceBuilder.build();
     }
 }
