@@ -35,8 +35,7 @@ public class CrudRepository<T> implements IRepository<T> {
             preparedStatement.executeUpdate();
             return t;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            return traceErrorSql(e);
         }
     }
 
@@ -61,8 +60,7 @@ public class CrudRepository<T> implements IRepository<T> {
             preparedStatement.executeUpdate();
             return t;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            return traceErrorSql(e);
         }
     }
 
@@ -77,7 +75,7 @@ public class CrudRepository<T> implements IRepository<T> {
                 resultList.add(mapRowToObject(resultSet));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return traceErrorSql(e);
         }
         return resultList;
     }
@@ -94,7 +92,7 @@ public class CrudRepository<T> implements IRepository<T> {
                 return Optional.of(object);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return traceErrorSql(e);
         }
         return Optional.empty();
     }
@@ -120,5 +118,14 @@ public class CrudRepository<T> implements IRepository<T> {
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected <T> T traceErrorSql(SQLException e) {
+        if (e.getSQLState().equals("23000")) {
+            System.err.println("Error: Duplicate entry for unique field");
+        } else {
+            e.printStackTrace();
+        }
+        return null; // Retourne null en cas d'erreur
     }
 }

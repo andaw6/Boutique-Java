@@ -1,4 +1,16 @@
 package com.ehacdev.entities;
 
-public class Categorie {
+import com.ehacdev.interfaces.Identifiable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Categorie implements Serializable, Identifiable {
+    private int id;
+    private String libelle;
 }

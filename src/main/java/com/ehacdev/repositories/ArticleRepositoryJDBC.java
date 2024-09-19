@@ -20,7 +20,7 @@ public class ArticleRepositoryJDBC extends CrudRepository<Article> implements IA
 
     public ArticleRepositoryJDBC(DatabaseFactory databaseFactory) {
         super(databaseFactory);
-        this.tableName = "article";
+        this.tableName = "articles";
         this.type = Article.class;
     }
 
@@ -58,10 +58,12 @@ public class ArticleRepositoryJDBC extends CrudRepository<Article> implements IA
         return false;
     }
 
-
-
     @Override
     public Article save(Article article) {
+        if (findByTitle(article.getTitle()).isPresent()) {
+            System.out.println("Article with this title already exists.");
+            return null;
+        }
         try (Connection connection = databaseFactory.getConnection()) {
             String query = "INSERT INTO " + tableName + " (title, price, quantity, threshold) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -76,8 +78,7 @@ public class ArticleRepositoryJDBC extends CrudRepository<Article> implements IA
             }
             return article;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            return traceErrorSql(e);
         }
     }
 
@@ -106,13 +107,10 @@ public class ArticleRepositoryJDBC extends CrudRepository<Article> implements IA
                     return null;
                 }
             } catch (SQLException e) {
-                connection.rollback();
-                e.printStackTrace();
-                return null;
+                return traceErrorSql(e);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            return traceErrorSql(e);
         }
     }
 
@@ -129,8 +127,7 @@ public class ArticleRepositoryJDBC extends CrudRepository<Article> implements IA
             return article;
         } catch (SQLException e) {
             System.out.println("Erreur lors du mapping du champ");
-            e.printStackTrace();
-            return null;
+            return traceErrorSql(e);
         }
     }
 

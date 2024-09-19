@@ -3,26 +3,21 @@ package com.ehacdev.entities;
 import com.ehacdev.interfaces.Identifiable;
 import lombok.*;
 
+import java.io.Serializable;
+import java.util.Collection;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Article implements Identifiable {
-
+public class Article implements Serializable, Identifiable {
     private int id;
-
     private String title;
-
     private double price;
-
     private int quantity;
+    private int threshold; // quantité
+    private Collection<Dette> dettes;
 
-    private int threshold; // quantity
 
-
-    @Override
-    public int getId() {
-        return id;
-    }
 
     @Override
     public String toString() {

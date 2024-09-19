@@ -4,6 +4,7 @@ import com.ehacdev.entities.Article;
 import com.ehacdev.repositories.interfaces.IArticleRepository;
 import com.ehacdev.services.interfaces.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

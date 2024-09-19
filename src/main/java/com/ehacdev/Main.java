@@ -1,16 +1,16 @@
 package com.ehacdev;
 
-import com.ehacdev.config.AppConfig;
-import com.ehacdev.config.CollectionProvider;
-import com.ehacdev.entities.Article;
-import com.ehacdev.services.interfaces.IArticleService;
+import java.util.Collection;
+import java.util.Optional;
+
+import com.ehacdev.entities.Client;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import com.ehacdev.config.AppConfig;
+import com.ehacdev.entities.Article;
+import com.ehacdev.services.interfaces.IArticleService;
 
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 @ComponentScan(basePackages = "com.ehacdev")
@@ -41,6 +41,7 @@ public class Main {
 
         // Afficher l'article sauvegardé
         System.out.println(myArticle);
+
 
     }
 }
